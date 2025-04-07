@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -154,6 +155,15 @@ async function main() {
       },
     },
   });
+
+  // Create sample users
+  const initialUser = {
+    name: "Admin",
+    email: "admin@email.com",
+    password: await bcrypt.hash("senha123", 10),
+  };
+
+  await prisma.user.create({ data: initialUser });
 
   console.log('Seed data created successfully!');
 }

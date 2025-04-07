@@ -1,18 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { pageService } from '@/services/pageService';
+import { authService } from '@/services/authService';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'GET') {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const pages = await pageService.findAll();
-    res.status(200).json(pages);
+    const result = await authService.signIn(req.body);
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: 'Unable to fetch pages' });
+    res.status(401).json({ error: 'Invalid credentials' });
   }
 }
