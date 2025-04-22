@@ -76,6 +76,15 @@ export const pageService = {
     });
   },
 
+  async findBySlug(slug: string) {
+    return prisma.page.findUnique({
+      where: { slug },
+      include: {
+        blocks: true,
+      },
+    });
+  },
+
   async delete(id: string) {
     return prisma.page.delete({
       where: { id },

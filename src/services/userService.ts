@@ -59,7 +59,7 @@ export const userService = {
   },
 
   async update(id: string, data: UpdateUserInput) {
-    const updateData: any = { ...data };
+    const updateData: UpdateUserInput = { ...data };
     if (data.password) {
       updateData.password = await bcrypt.hash(data.password, 10);
     }

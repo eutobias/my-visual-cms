@@ -18,6 +18,7 @@ const eslintConfig = [
     },
     rules: {
       "no-relative-import-paths/no-relative-import-paths": "error",
+      "@typescript-eslint/no-unused-vars": "off"
     },
   },
 ];

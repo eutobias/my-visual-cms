@@ -3,13 +3,15 @@ import { HeadingEditorConfig } from "@/components/Heading";
 import { TextEditorConfig } from "@/components/Text";
 import { pageService } from "@/services/pageService";
 import type {
+  InferGetStaticPropsType,
   GetStaticProps,
-  InferGetStaticPropsType
+  GetStaticPaths,
 } from "next";
 
 import { Config, Puck, Render } from "@measured/puck";
 import "@measured/puck/puck.css";
 import { PageData } from "@/types/pageData.type";
+
 
 const config: Config = {
   components: {
@@ -71,8 +73,23 @@ const save = (data: unknown) => {
   console.log(JSON.stringify(data));
 };
 
-export const getStaticProps = (async () => {
-  const page = await pageService.findBySlug("home");
+export const getStaticPaths = (async () => {
+  const pages = await pageService.findAll();
+
+  return {
+    paths: pages.map((page) => ({
+      params: {
+        page: page.slug,
+      },
+    })),
+    fallback: false,
+  };
+}) satisfies GetStaticPaths;
+
+export const getStaticProps = (async (context) => {
+  const { params } = context as { params: { page: string } };
+
+  const page = await pageService.findBySlug(params?.page);
 
   const data = {
     name: page?.name,
